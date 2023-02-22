@@ -62,7 +62,7 @@ object Binoculars {
     *   the center of the binoculars where they should be pointed to
     */
   def mostVessels(lightMarksOnHorizon: Seq[Seq[String]], angle: Int): Int =
-    (0 to 360)
+    (0 until 360)
       .map(center => center -> countVessels(lightMarksOnHorizon, center, angle, _ => true))
       .toMap
       .maxBy(_._2)
