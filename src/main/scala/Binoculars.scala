@@ -6,6 +6,13 @@
   */
 object Binoculars {
 
+  /** @note
+    *   - if center + (angle / 2) >= 360, select [center + (angle / 2), 360[ ++ [0, center]
+    *   - if center - (angle / 2) < 0, select [ 360 + (center - (angle / 2)), 360 [ ++ [0, center[
+    *
+    * @return
+    *   the lights that are only within [center - angle/2, center + angle/2]
+    */
   def filterByCenterAngle(
       lightMarksOnHorizon: Seq[Seq[String]],
       center: Int,
@@ -15,17 +22,17 @@ object Binoculars {
     val minus = center - (angle / 2)
 
     val plusSeq =
-      if (plus < 360) lightMarksOnHorizon.slice(center, plus)
+      if (plus < 360) lightMarksOnHorizon.slice(center, plus + 1)
       else
         lightMarksOnHorizon.slice(center, 360) ++
           lightMarksOnHorizon.slice(0, plus - 360 + 1)
 
-
+    // center excluded cause it's already included in the plus side
     val minusSeq =
       if (minus >= 0) lightMarksOnHorizon.slice(minus, center)
       else
         lightMarksOnHorizon.slice(360 + minus, 360) ++
-          lightMarksOnHorizon.slice(0, center) // center excluded cause it's already included in the plus side
+          lightMarksOnHorizon.slice(0, center)
 
     (plusSeq ++ minusSeq).filter(_.nonEmpty)
   }
